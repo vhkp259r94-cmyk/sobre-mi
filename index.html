@@ -164,6 +164,13 @@
     .sobre .datos { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
     .dos { gap: 0; }
   }
+  /* En móvil el menú baja a su propia fila para que se vean todos los enlaces */
+  @media (max-width: 640px) {
+    html { scroll-padding-top: 96px; }
+    nav .wrap { flex-wrap: wrap; row-gap: 2px; padding-bottom: 6px; }
+    .enlaces { order: 3; flex-basis: 100%; justify-content: space-between; gap: 4px; overflow: visible; }
+    .enlaces a { font-size: clamp(11px, 3.4vw, 14px); }
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
