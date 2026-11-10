@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>David Nicolás Martínez Pinzón · Sobre mí</title>
+<meta name="description" content="Estudiante de SMR en Palma de Mallorca. Soporte técnico, mantenimiento de equipos y resolución de incidencias.">
+<script>
+  // Tema antes de pintar, para evitar parpadeo
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('tema'); } catch (e) {}
+    if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+    document.documentElement.classList.add('js');
+  })();
+</script>
+<style>
+  :root {
+    --bg: #0c1120; --surface: #141b2d; --text: #e9ecf5; --muted: #98a1b8;
+    --line: #26304a; --accent: #34d399; --on-accent: #052016; --accent2: #818cf8;
+    --term-bg: #0a0d11; --term-text: #d7d5cc; --term-line: #2a313c;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f6fb; --surface: #ffffff; --text: #151a2c; --muted: #5b6480;
+    --line: #dde1ee; --accent: #0b7a53; --on-accent: #ffffff; --accent2: #4f46e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 var(--sans);
+    transition: background-color .3s, color .3s;
+  }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  /* Barra de progreso y navegación */
+  #progreso { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--accent); z-index: 3; }
+  nav { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; gap: 18px; align-items: center; padding-top: 10px; padding-bottom: 10px; }
+  .logo { font: 700 17px var(--sans); color: var(--accent); margin-right: auto; text-decoration: none; white-space: nowrap; }
+  .logo span { color: var(--muted); }
+  .enlaces { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; }
+  .enlaces::-webkit-scrollbar { display: none; }
+  .enlaces a { font: 14px var(--sans); color: var(--muted); text-decoration: none; white-space: nowrap; padding: 4px 0; border-bottom: 2px solid transparent; }
+  .enlaces a:hover, .enlaces a.activo { color: var(--text); border-color: var(--accent); }
+  #tema { flex: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; font-size: 16px; }
+
+  /* Cabecera */
+  header { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; padding: 64px 0 56px; }
+  .estado { display: inline-flex; align-items: center; gap: 8px; font: 13px var(--sans); color: var(--accent2); border: 1px solid var(--line); background: var(--surface); padding: 4px 12px; border-radius: 999px; }
+  .estado i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+  @keyframes pulso { 50% { opacity: .25; } }
+  h1 { margin: 18px 0 10px; font-size: clamp(34px, 6vw, 52px); line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .rol { font: 600 17px var(--sans); margin: 0 0 14px; min-height: 1.65em; }
+  .rol { color: var(--accent2); }
+  .cursor { display: inline-block; width: 9px; height: 1.05em; background: var(--accent); vertical-align: text-bottom; animation: parpadeo 1s steps(1) infinite; }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+  .intro { margin: 0 0 22px; color: var(--muted); max-width: 46ch; }
+  .btn { display: inline-block; padding: 10px 18px; border-radius: 8px; text-decoration: none; font: 600 14px var(--sans); border: 1px solid var(--accent); color: var(--accent); background: transparent; cursor: pointer; margin: 0 8px 8px 0; transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px var(--accent); }
+  .btn.primario { background: var(--accent); color: var(--on-accent); }
+
+  /* Terminal */
+  .terminal { background: var(--term-bg); color: var(--term-text); border: 1px solid var(--term-line); border-radius: 12px; overflow: hidden; font: 13.5px/1.55 var(--mono); box-shadow: 0 24px 50px -24px rgba(0, 0, 0, .55); min-width: 0; }
+  .barra { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-bottom: 1px solid var(--term-line); color: #8b8b82; font-size: 12px; }
+  .barra i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+  .barra i:nth-child(2) { background: #febc2e; } .barra i:nth-child(3) { background: #28c840; margin-right: 8px; }
+  #salida { height: 232px; overflow-y: auto; padding: 12px 14px 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  #salida .orden { color: #34d399; } #salida .error { color: #ff8f80; }
+  .entrada { display: flex; gap: 8px; padding: 4px 14px 10px; }
+  .entrada label { color: #818cf8; white-space: nowrap; }
+  .entrada input { flex: 1; min-width: 0; background: none; border: 0; color: inherit; font: inherit; outline: none; caret-color: #34d399; }
+  .atajos { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--term-line); }
+  .atajos button { font: 12px var(--mono); color: #d7d5cc; background: #161b22; border: 1px solid var(--term-line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+  .atajos button:hover { border-color: #34d399; color: #34d399; }
+
+  /* Secciones */
+  section { padding: 44px 0; }
+  h2 { margin: 0 0 22px; font: 700 26px var(--sans); letter-spacing: -0.02em; display: flex; align-items: center; gap: 12px; }
+  h2::before { content: ""; width: 6px; height: 24px; border-radius: 3px; background: var(--accent); }
+  section p { max-width: 65ch; margin: 0 0 12px; }
+  .sobre { display: grid; grid-template-columns: 1.7fr 1fr; gap: 32px; align-items: start; }
+  .sobre .datos { grid-template-columns: 1fr; margin: 0; }
+  .dos { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: start; }
+  .datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 24px; }
+  .datos div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .datos b { display: block; font: 700 22px var(--sans); color: var(--accent); }
+  .datos span { font-size: 13px; color: var(--muted); }
+
+  /* Habilidades con pestañas */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tabs button { font: 13px var(--sans); padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 0; list-style: none; min-height: 88px; align-content: flex-start; }
+  .chips li { padding: 8px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 15px; animation: entrar .35s both; }
+  .chips li::before { content: "▸ "; color: var(--accent2); }
+  .chips li:nth-child(2) { animation-delay: .05s; } .chips li:nth-child(3) { animation-delay: .1s; }
+  .chips li:nth-child(4) { animation-delay: .15s; } .chips li:nth-child(5) { animation-delay: .2s; }
+  @keyframes entrar { from { opacity: 0; transform: translateY(8px); } }
+
+  /* Experiencia */
+  .puesto { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .puesto h3 { margin: 0; font-size: 18px; }
+  .puesto > small { display: block; margin: 4px 0 14px; font: 13px var(--sans); color: var(--muted); }
+  details { border-top: 1px solid var(--line); }
+  summary { cursor: pointer; padding: 12px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font: 700 18px var(--sans); color: var(--accent); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin: 0 0 14px; color: var(--muted); max-width: 60ch; }
+
+  /* Formación */
+  .tiempo { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 2px solid var(--line); }
+  .tiempo li { position: relative; padding: 0 0 26px; }
+  .tiempo li:last-child { padding-bottom: 0; }
+  .tiempo li::before { content: ""; position: absolute; left: -29px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .tiempo li:first-child::before { background: var(--accent); }
+  .tiempo time { font: 13px var(--sans); color: var(--accent2); }
+  .tiempo strong { display: block; }
+  .tiempo span { color: var(--muted); font-size: 14px; }
+
+  /* Contacto */
+  #contacto .caja { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px 20px; }
+  #contacto .correo { font: 600 clamp(16px, 4vw, 22px) var(--sans); overflow-wrap: anywhere; margin: 0 0 16px; }
+  #aviso { font: 13px var(--sans); color: var(--accent2); min-height: 1.6em; margin: 0; }
+  footer { padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font: 13px var(--sans); }
+
+  /* Aparición al hacer scroll */
+  .js .aparece h2 { clip-path: inset(0 100% 0 0); transition: clip-path .8s cubic-bezier(.2, .7, .1, 1); }
+  .js .aparece.visto h2 { clip-path: inset(0); }
+  .js .aparece > :not(h2) { opacity: 0; transform: translateX(-32px); transition: opacity .6s .15s, transform .8s .15s cubic-bezier(.2, .7, .1, 1); }
+  .js #formacion.aparece:not(.visto) > :not(h2) { transform: translateY(32px); }
+  .js .aparece.visto > :not(h2) { opacity: 1; transform: none; }
+
+  /* Nombre que sube al cargar */
+  .fila { display: block; overflow: hidden; padding-bottom: .08em; }
+  .js .fila > * { display: inline-block; animation: sube .9s cubic-bezier(.2, .7, .1, 1) both; }
+  .js .fila + .fila > * { animation-delay: .14s; }
+  @keyframes sube { from { transform: translateY(115%); } }
+
+  /* Cinta en movimiento */
+  .cinta { overflow: hidden; border-block: 1px solid var(--line); padding: 14px 0; }
+  .cinta div { display: flex; width: max-content; animation: corre 30s linear infinite; }
+  .cinta:hover div { animation-play-state: paused; }
+  .cinta span { font: 700 clamp(20px, 4vw, 30px) var(--sans); letter-spacing: -.02em; white-space: nowrap; color: var(--muted); }
+  .cinta span::after { content: "/"; color: var(--accent); padding: 0 26px; }
+  @keyframes corre { to { transform: translateX(-50%); } }
+
+  /* Consola que se inclina con el ratón, línea de formación que avanza */
+  header { perspective: 1100px; }
+  .terminal { transition: transform .25s ease-out; }
+  .tiempo { position: relative; }
+  .tiempo::after { content: ""; position: absolute; left: -2px; top: 0; width: 2px; height: calc(var(--avance, 0) * 100%); background: var(--accent); }
+  .tiempo li::before { z-index: 1; }
+
+  @media (max-width: 760px) {
+    header { grid-template-columns: 1fr; padding: 40px 0; }
+    .sobre, .dos { grid-template-columns: 1fr; }
+    .sobre .datos { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .dos { gap: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .aparece h2, .js .aparece > :not(h2) { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progreso"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">David Martínez<span>.</span></a>
+    <div class="enlaces">
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#experiencia">Experiencia</a>
+      <a href="#formacion">Formación</a>
+      <a href="#habilidades">Habilidades</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <button id="tema" type="button" aria-label="Cambiar entre tema claro y oscuro">◐</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <div>
+      <span class="estado"><i></i>Disponibilidad inmediata</span>
+      <h1><span class="fila"><span>David Nicolás</span></span><span class="fila"><em>Martínez Pinzón</em></span></h1>
+      <p class="rol"><span id="escribe">Soporte técnico</span><span class="cursor" aria-hidden="true"></span></p>
+      <p class="intro">Estudiante de SMR en Palma de Mallorca. Monto, mantengo y reparo equipos, y resuelvo incidencias paso a paso.</p>
+      <a class="btn primario" href="#contacto">Contactar</a>
+      <a class="btn" href="cv.pdf">Descargar CV</a>
+    </div>
+
+    <div class="terminal">
+      <div class="barra"><i></i><i></i><i></i>visitante@david: ~</div>
+      <div id="salida" role="log" aria-live="polite"></div>
+      <form class="entrada" autocomplete="off">
+        <label for="orden">$</label>
+        <input id="orden" type="text" spellcheck="false" autocapitalize="off" placeholder="escribe un comando…" aria-label="Comando">
+      </form>
+      <div class="atajos">
+        <button type="button" data-c="ayuda">ayuda</button>
+        <button type="button" data-c="sobre-mi">sobre-mi</button>
+        <button type="button" data-c="habilidades">habilidades</button>
+        <button type="button" data-c="experiencia">experiencia</button>
+        <button type="button" data-c="contacto">contacto</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="cinta" aria-hidden="true"><div id="cinta"></div></div>
+
+  <section id="sobre-mi" class="aparece">
+    <h2>Sobre mí</h2>
+    <div class="sobre"><div>
+    <p>Estudio el Grado Medio en Sistemas Microinformáticos y Redes (SMR), después de completar la FP Básica en Informática y Comunicaciones. Tengo experiencia en soporte técnico, mantenimiento preventivo y correctivo de equipos y resolución de incidencias informáticas.</p>
+    <p>Soy una persona proactiva, responsable y orientada al trabajo en equipo. Vivo en Palma de Mallorca y tengo disponibilidad inmediata.</p>
+    </div>
+    <div class="datos">
+      <div><b data-n="200">200 h</b><span>de prácticas en empresa</span></div>
+      <div><b>3</b><span>idiomas: español, catalán e inglés</span></div>
+      <div><b>SMR</b><span>Grado Medio en curso</span></div>
+    </div></div>
+  </section>
+
+  <div class="dos">
+  <section id="experiencia" class="aparece">
+    <h2>Experiencia</h2>
+    <article class="puesto">
+      <h3>Prácticas de Formación Profesional</h3>
+      <small>Servibite · Palma de Mallorca · 200 horas (2024)</small>
+      <details open>
+        <summary>Mantenimiento de sistemas</summary>
+        <p>Tareas preventivas y correctivas de hardware y software.</p>
+      </details>
+      <details>
+        <summary>Resolución de incidencias</summary>
+        <p>Diagnóstico de averías, detección de errores y optimización de rendimiento.</p>
+      </details>
+      <details>
+        <summary>Soporte y atención</summary>
+        <p>Asistencia directa a usuarios, cuidando la eficiencia y los tiempos de respuesta.</p>
+      </details>
+      <details>
+        <summary>Documentación técnica</summary>
+        <p>Registro de procedimientos, inventariado de material e informes de soporte.</p>
+      </details>
+    </article>
+  </section>
+
+  <section id="formacion" class="aparece">
+    <h2>Formación</h2>
+    <ul class="tiempo">
+      <li><time>En curso</time><strong>Grado Medio en Sistemas Microinformáticos y Redes (SMR)</strong><span>CC San José Obrero</span></li>
+      <li><time>2024</time><strong>FP Básica en Informática y Comunicaciones</strong><span>CC San José Obrero</span></li>
+      <li><time>ESO</time><strong>Educación Secundaria Obligatoria</strong><span>IES Son Rullan</span></li>
+    </ul>
+  </section>
+  </div>
+
+  <section id="habilidades" class="aparece">
+    <h2>Habilidades</h2>
+    <div class="tabs" role="tablist" aria-label="Categorías de habilidades"></div>
+    <ul class="chips" id="chips"></ul>
+  </section>
+
+  <section id="contacto" class="aparece">
+    <h2>Contacto</h2>
+    <div class="caja">
+      <p>¿Hablamos? Escríbeme y te respondo lo antes posible. Referencias de Servibite disponibles bajo petición.</p>
+      <p class="correo">Nicopinzon1@outlook.es</p>
+      <p class="correo"><a href="tel:+34634614661" style="color:inherit;text-decoration:none">+34 634 61 46 61</a></p>
+      <p style="color:var(--muted)">Palma de Mallorca, España</p>
+      <a class="btn primario" href="mailto:Nicopinzon1@outlook.es">Enviar email</a>
+      <a class="btn" href="tel:+34634614661">Llamar</a>
+      <button class="btn" id="copiar" type="button">Copiar dirección</button>
+      <p id="aviso" role="status"></p>
+    </div>
+  </section>
+
+  <footer>© 2026 David Nicolás Martínez Pinzón · Palma de Mallorca</footer>
+</div>
+
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var CORREO = 'Nicopinzon1@outlook.es';
+
+  /* Tema claro / oscuro */
+  $('#tema').addEventListener('click', function () {
+    var t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem('tema', t); } catch (e) {}
+  });
+
+  /* Barra de progreso */
+  function progreso() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    $('#progreso').style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + '%';
+    var linea = $('.tiempo'), r = linea.getBoundingClientRect();
+    var avance = quieto ? 1 : Math.max(0, Math.min(1, (innerHeight * 0.7 - r.top) / r.height));
+    linea.style.setProperty('--avance', avance);
+  }
+  addEventListener('scroll', progreso, { passive: true });
+  progreso();
+
+  /* Rol que se escribe solo */
+  var frases = ['Soporte técnico', 'Mantenimiento de equipos', 'Resolución de incidencias', 'Montaje de equipos', 'Redes locales'];
+  if (!quieto) {
+    var el = $('#escribe'), f = 0, n = frases[0].length, borrando = true;
+    (function paso() {
+      var frase = frases[f];
+      n += borrando ? -1 : 1;
+      el.textContent = frase.slice(0, n);
+      var espera = borrando ? 35 : 70;
+      if (!borrando && n === frase.length) { borrando = true; espera = 1800; }
+      else if (borrando && n === 0) { borrando = false; f = (f + 1) % frases.length; espera = 300; }
+      setTimeout(paso, espera);
+    })();
+  }
+
+  /* Habilidades por pestañas */
+  var grupos = {
+    'Sistemas y hardware': ['Montaje de equipos', 'Mantenimiento preventivo', 'Diagnóstico de averías', 'Redes locales básicas'],
+    'Soporte y gestión': ['Atención al usuario', 'Resolución de incidencias', 'Documentación técnica'],
+    'Software': ['Sistemas operativos', 'Python (nociones)', 'JavaScript (nociones)', 'HTML/CSS (nociones)'],
+    'Personales': ['Trabajo en equipo', 'Orientación al detalle', 'Puntualidad', 'Actitud positiva', 'Aprendizaje rápido'],
+    'Idiomas': ['Español · nativo', 'Catalán · B1', 'Inglés · básico']
+  };
+  var tabs = $('.tabs'), chips = $('#chips');
+  function mostrar(nombre) {
+    Array.prototype.forEach.call(tabs.children, function (b) {
+      b.setAttribute('aria-selected', b.textContent === nombre ? 'true' : 'false');
+    });
+    chips.textContent = '';
+    grupos[nombre].forEach(function (h) {
+      var li = document.createElement('li');
+      li.textContent = h;
+      chips.appendChild(li);
+    });
+  }
+  Object.keys(grupos).forEach(function (nombre) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = nombre;
+    b.addEventListener('click', function () { mostrar(nombre); });
+    tabs.appendChild(b);
+  });
+  mostrar('Sistemas y hardware');
+
+  /* Terminal */
+  var salida = $('#salida'), entrada = $('#orden');
+  function linea(texto, clase) {
+    var d = document.createElement('div');
+    if (clase) d.className = clase;
+    d.textContent = texto;
+    salida.appendChild(d);
+    salida.scrollTop = salida.scrollHeight;
+  }
+  function ir(id) { document.getElementById(id).scrollIntoView(); }
+  var comandos = {
+    'ayuda': function () { return 'Comandos disponibles:\n  sobre-mi     quién soy\n  habilidades  qué sé hacer\n  experiencia  dónde he trabajado\n  formacion    qué he estudiado\n  idiomas      qué idiomas hablo\n  contacto     cómo escribirme\n  cv           abre mi CV en PDF\n  tema         cambia claro/oscuro\n  limpiar      borra la pantalla'; },
+    'sobre-mi': function () { return 'David Nicolás Martínez Pinzón\nEstudiante de SMR en Palma de Mallorca.\nProactivo, responsable y de trabajo en equipo.\nDisponibilidad inmediata.'; },
+    'habilidades': function () {
+      return Object.keys(grupos).filter(function (g) { return g !== 'Idiomas'; })
+        .map(function (g) { return g + ':\n  ' + grupos[g].join(', '); }).join('\n');
+    },
+    'experiencia': function () { return 'Servibite · Palma de Mallorca (2024)\nPrácticas de FP, 200 horas:\n  - Mantenimiento de sistemas\n  - Resolución de incidencias\n  - Soporte y atención a usuarios\n  - Documentación técnica'; },
+    'formacion': function () { return 'En curso  Grado Medio SMR · CC San José Obrero\n2024      FP Básica Informática y Comunicaciones\n          ESO · IES Son Rullan'; },
+    'idiomas': function () { return grupos['Idiomas'].join('\n'); },
+    'contacto': function () { ir('contacto'); return 'Email:     ' + CORREO + '\nTeléfono:  +34 634 61 46 61\nUbicación: Palma de Mallorca, España'; },
+    'cv': function () { window.open('cv.pdf', '_blank'); return 'Abriendo cv.pdf…'; },
+    'tema': function () { $('#tema').click(); return 'Tema cambiado.'; },
+    'limpiar': function () { salida.textContent = ''; return ''; }
+  };
+  var alias = { 'help': 'ayuda', 'clear': 'limpiar', 'cls': 'limpiar', 'whoami': 'sobre-mi', 'formación': 'formacion' };
+  function ejecutar(texto) {
+    var c = texto.trim().toLowerCase();
+    if (!c) return;
+    linea('$ ' + c, 'orden');
+    c = alias[c] || c;
+    if (comandos[c]) { var r = comandos[c](); if (r) linea(r); }
+    else linea('comando no encontrado: ' + c + '\nEscribe "ayuda" para ver los disponibles.', 'error');
+  }
+  $('.entrada').addEventListener('submit', function (e) {
+    e.preventDefault();
+    ejecutar(entrada.value);
+    entrada.value = '';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.atajos button'), function (b) {
+    b.addEventListener('click', function () { ejecutar(b.dataset.c); });
+  });
+  linea('Bienvenido. Soy David, técnico en formación.');
+  linea('Escribe "ayuda" o pulsa un comando de abajo.\n');
+
+  /* Cinta en movimiento: el contenido va dos veces para que el bucle no tenga corte */
+  var palabras = ['Montaje de equipos', 'Mantenimiento', 'Diagnóstico de averías', 'Redes locales', 'Soporte a usuarios', 'Documentación técnica'];
+  palabras.concat(palabras).forEach(function (p) {
+    var s = document.createElement('span');
+    s.textContent = p;
+    $('#cinta').appendChild(s);
+  });
+
+  /* La consola se inclina siguiendo al ratón */
+  if (!quieto && matchMedia('(hover: hover)').matches) {
+    var cab = $('header'), term = $('.terminal');
+    cab.addEventListener('pointermove', function (e) {
+      var r = cab.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      term.style.transform = 'rotateY(' + (x * 7).toFixed(2) + 'deg) rotateX(' + (-y * 7).toFixed(2) + 'deg)';
+    });
+    cab.addEventListener('pointerleave', function () { term.style.transform = ''; });
+  }
+
+  /* Contador de horas */
+  function contar(seccion) {
+    var b = seccion.querySelector('[data-n]');
+    if (!b || quieto) return;
+    var fin = +b.dataset.n, t0 = performance.now();
+    (function cuadro(t) {
+      var p = Math.min((t - t0) / 1300, 1);
+      b.textContent = Math.round(fin * (1 - Math.pow(1 - p, 3))) + ' h';
+      if (p < 1) requestAnimationFrame(cuadro);
+    })(t0);
+  }
+
+  /* Copiar email */
+  $('#copiar').addEventListener('click', function () {
+    var aviso = $('#aviso');
+    function ok() { aviso.textContent = '✓ Dirección copiada'; setTimeout(function () { aviso.textContent = ''; }, 2500); }
+    function mal() { aviso.textContent = 'No se pudo copiar; selecciónala a mano.'; }
+    if (navigator.clipboard) navigator.clipboard.writeText(CORREO).then(ok, mal); else mal();
+  });
+
+  /* Aparición al hacer scroll y enlace activo */
+  if ('IntersectionObserver' in window) {
+    var ver = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visto'); contar(e.target); ver.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    var activo = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var a = document.querySelector('.enlaces a[href="#' + e.target.id + '"]');
+        if (a && e.isIntersecting) {
+          Array.prototype.forEach.call(document.querySelectorAll('.enlaces a'), function (x) { x.classList.remove('activo'); });
+          a.classList.add('activo');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { ver.observe(s); activo.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('.aparece'), function (s) { s.classList.add('visto'); });
+  }
+})();
+</script>
+</body>
+</html>
